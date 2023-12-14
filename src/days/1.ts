@@ -21,7 +21,7 @@ export default class Day1 extends Day implements IDay {
         return line.replace(regex, (match) => wordToDigitMap[match] || match);
     }
 
-    private getNumber(digitString: string) : number {
+    private getNumber(digitString: string): number {
         if (digitString.length > 0) {
             const digitArray = [...digitString];
             const [firstIndex, lastIndex] = [0, digitArray.length - 1];
