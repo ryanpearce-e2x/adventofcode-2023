@@ -42,6 +42,20 @@ export default class Day2 extends Day implements IDay {
     }
 
     partTwo(): Solution {
-        return 0;
+        const games = this.getGames();
+        const totalPower = games.reduce((acc, game) => {
+            const maxSet = game.sets.reduce(
+                (max, set) => ({
+                    red: Math.max(set.red, max.red),
+                    green: Math.max(set.green, max.green),
+                    blue: Math.max(set.blue, max.blue),
+                }),
+                { red: 0, green: 0, blue: 0 }
+            );
+
+            return acc + maxSet.red * maxSet.green * maxSet.blue;
+        }, 0);
+
+        return totalPower;
     }
 }
