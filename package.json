@@ -1,0 +1,27 @@
+{
+  "name": "adventofcode-2023",
+  "version": "1.0.0",
+  "description": "Advent of Code 2023",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ryanpearce-e2x/adventofcode-2023.git"
+  },
+  "author": "Ryan Pearce",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ryanpearce-e2x/adventofcode-2023/issues"
+  },
+  "homepage": "https://github.com/ryanpearce-e2x/adventofcode-2023#readme",
+  "dependencies": {
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "eslint": "^8.55.0",
+    "eslint-plugin-prettier": "^5.0.1"
+  }
+}
