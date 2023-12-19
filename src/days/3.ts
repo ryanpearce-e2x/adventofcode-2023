@@ -1,62 +1,90 @@
 import { Day, IDay, Solution } from '../types/Day';
 
-interface GridPosition {
-    x: number;
-    y: number;
-}
-
 export default class Day3 extends Day implements IDay {
+    gridSize = 140;
+    grid: string[][];
+
     constructor() {
         super(3);
+        this.grid = this.input.split('\n').map((row) => row.split(''));
+    }
+
+    processNumbers(callback: (number: number, xStart: number, y: number) => void): void {
+        for (let y = 0; y < this.gridSize; y++) {
+            const row = this.grid[y];
+            [...row.join('').matchAll(/\d+/g)].forEach((match) => {
+                const number = parseInt(match[0]);
+                const xStart = match.index ?? 0;
+                callback(number, xStart, y);
+            });
+        }
+    }
+
+    isAdjacentSymbol(xStart: number, y: number, length: number): boolean {
+        for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= length; dx++) {
+                if (dy === 0 && dx >= 0 && dx < length) continue;
+
+                const checkX = xStart + dx;
+                const checkY = y + dy;
+                if (
+                    checkY >= 0 &&
+                    checkY < this.gridSize &&
+                    checkX >= 0 &&
+                    checkX < this.gridSize &&
+                    !/[0-9.]/.test(this.grid[checkY][checkX])
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     partOne(): Solution {
-        const grid = this.input.split('\n').map((row) => row.split(''));
-        const gridSize = 140;
         let sum = 0;
-
-        const isSymbol = (char: string): boolean => !/[0-9.]/.test(char);
-        const findNumbersInRow = (row: string): RegExpMatchArray[] => [...row.matchAll(/\d+/g)];
-
-        const checkAdjacentSymbols = (position: GridPosition, length: number): boolean => {
-            for (let dy = -1; dy <= 1; dy++) {
-                for (let dx = -1; dx <= length; dx++) {
-                    if (dy === 0 && dx >= 0 && dx < length) continue;
-
-                    const checkY = position.y + dy;
-                    const checkX = position.x + dx;
-                    if (
-                        checkY >= 0 &&
-                        checkY < gridSize &&
-                        checkX >= 0 &&
-                        checkX < gridSize &&
-                        isSymbol(grid[checkY][checkX])
-                    ) {
-                        return true;
-                    }
-                }
+        this.processNumbers((number, xStart, y) => {
+            if (this.isAdjacentSymbol(xStart, y, number.toString().length)) {
+                sum += number;
             }
-            return false;
-        };
-
-        for (let y = 0; y < gridSize; y++) {
-            const row = grid[y].join('');
-            const numbers = findNumbersInRow(row);
-
-            numbers.forEach((match) => {
-                const position: GridPosition = { x: match.index ?? 0, y };
-                const length = match[0].length;
-
-                if (checkAdjacentSymbols(position, length)) {
-                    sum += parseInt(match[0]);
-                }
-            });
-        }
-
+        });
         return sum;
     }
 
     partTwo(): Solution {
-        return 0;
+        let sum = 0;
+        const asterisksToNumbersMap = new Map<string, number[]>();
+
+        this.processNumbers((number, xStart, y) => {
+            for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= number.toString().length; dx++) {
+                    if (dy === 0 && dx >= 0 && dx < number.toString().length) continue;
+
+                    const checkX = xStart + dx;
+                    const checkY = y + dy;
+                    if (
+                        checkY >= 0 &&
+                        checkY < this.gridSize &&
+                        checkX >= 0 &&
+                        checkX < this.gridSize &&
+                        this.grid[checkY][checkX] === '*'
+                    ) {
+                        const key = `${checkX},${checkY}`;
+                        if (!asterisksToNumbersMap.has(key)) {
+                            asterisksToNumbersMap.set(key, []);
+                        }
+                        asterisksToNumbersMap.get(key)?.push(number);
+                    }
+                }
+            }
+        });
+
+        asterisksToNumbersMap.forEach((numbers) => {
+            if (numbers.length === 2) {
+                sum += numbers[0] * numbers[1];
+            }
+        });
+
+        return sum;
     }
 }
