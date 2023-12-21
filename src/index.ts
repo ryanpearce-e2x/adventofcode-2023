@@ -1,4 +1,4 @@
-import { Day1, Day2, Day3, Day4 } from './days';
+import { Day1, Day2, Day3, Day4, Day5 } from './days';
 
 const measureExecutionTime = (callback: () => void): number => {
     const startTime = performance.now();
@@ -8,17 +8,21 @@ const measureExecutionTime = (callback: () => void): number => {
     return elapsedTime;
 };
 
-const currentDays = [new Day1(), new Day2(), new Day3(), new Day4()];
+const currentDays = [new Day1(), new Day2(), new Day3(), new Day4(), new Day5(true)];
 
 currentDays.forEach((day, i) => {
     console.log(`-----Day ${i + 1}-----`);
-    const p1Time = measureExecutionTime(() => {
-        console.log('Part 1:', day.partOne());
-    });
-    console.log('Part 1 executed in', p1Time, 'ms');
-    const p2Time = measureExecutionTime(() => {
-        console.log('Part 2:', day.partTwo());
-    });
-    console.log('Part 2 executed in', p2Time, 'ms');
+    if (!day.skip) {
+        const p1Time = measureExecutionTime(() => {
+            console.log('Part 1:', day.partOne());
+        });
+        console.log('Part 1 executed in', p1Time, 'ms');
+        const p2Time = measureExecutionTime(() => {
+            console.log('Part 2:', day.partTwo());
+        });
+        console.log('Part 2 executed in', p2Time, 'ms');
+    } else {
+        console.log('SKIPPED');
+    }
     console.log('---------------');
 });

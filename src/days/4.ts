@@ -7,8 +7,8 @@ interface Card {
 }
 
 export default class Day4 extends Day implements IDay {
-    constructor() {
-        super(4);
+    constructor(skip: boolean = false) {
+        super(4, skip);
     }
 
     private getCards(): Card[] {

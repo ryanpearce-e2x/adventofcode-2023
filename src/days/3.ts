@@ -3,9 +3,8 @@ import { Day, IDay, Solution } from '../types/Day';
 export default class Day3 extends Day implements IDay {
     gridSize = 140;
     grid: string[][];
-
-    constructor() {
-        super(3);
+    constructor(skip: boolean = false) {
+        super(3, skip);
         this.grid = this.input.split('\n').map((row) => row.split(''));
     }
 

@@ -11,8 +11,8 @@ interface Game {
 }
 
 export default class Day2 extends Day implements IDay {
-    constructor() {
-        super(2);
+    constructor(skip: boolean = false) {
+        super(2, skip);
     }
 
     private getGames(): Game[] {

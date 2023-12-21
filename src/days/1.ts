@@ -1,8 +1,8 @@
 import { Day, IDay, Solution } from '../types/Day';
 
 export default class Day1 extends Day implements IDay {
-    constructor() {
-        super(1);
+    constructor(skip: boolean = false) {
+        super(1, skip);
     }
 
     private convertWordsToDigits(line: string): string {
