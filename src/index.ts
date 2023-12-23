@@ -1,4 +1,4 @@
-import { Day1, Day10, Day11, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9 } from './days';
+import { Day1, Day10, Day11, Day12, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9 } from './days';
 
 const measureExecutionTime = (callback: () => void): number => {
     const startTime = performance.now();
@@ -20,6 +20,7 @@ const currentDays = [
     new Day9(),
     new Day10(),
     new Day11(),
+    new Day12(),
 ];
 
 currentDays.forEach((day, i) => {
