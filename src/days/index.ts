@@ -8,5 +8,6 @@ import Day7 from './7';
 import Day8 from './8';
 import Day9 from './9';
 import Day10 from './10';
+import Day11 from './11';
 
-export { Day1, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9, Day10 };
+export { Day1, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9, Day10, Day11 };
