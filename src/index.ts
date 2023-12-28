@@ -8,6 +8,7 @@ import {
     Day15,
     Day16,
     Day17,
+    Day18,
     Day2,
     Day3,
     Day4,
@@ -45,6 +46,7 @@ const currentDays = [
     new Day15(),
     new Day16(),
     new Day17(),
+    new Day18(),
 ];
 
 const runDay = (day: IDay, dayNumber: number) => {

@@ -15,5 +15,25 @@ import Day14 from './14';
 import Day15 from './15';
 import Day16 from './16';
 import Day17 from './17';
+import Day18 from './18';
 
-export { Day1, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9, Day10, Day11, Day12, Day13, Day14, Day15, Day16, Day17 };
+export {
+    Day1,
+    Day2,
+    Day3,
+    Day4,
+    Day5,
+    Day6,
+    Day7,
+    Day8,
+    Day9,
+    Day10,
+    Day11,
+    Day12,
+    Day13,
+    Day14,
+    Day15,
+    Day16,
+    Day17,
+    Day18,
+};
