@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ryanpearce-e2x/adventofcode-2023#readme",
   "dependencies": {
+    "heap-js": "^2.3.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
