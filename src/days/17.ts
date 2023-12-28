@@ -1,86 +1,71 @@
 import { Day, IDay, Solution } from '../types/Day';
-import { Heap } from 'heap-js';
-
-interface Entry {
-    totalHeatLoss: number;
-    x: number;
-    y: number;
-    directionX: number;
-    directionY: number;
-    stepsMade: number;
-}
 
 export default class Day17 extends Day implements IDay {
-    data: string[];
     grid: number[][];
     constructor(skip: boolean = false) {
         super(17, skip);
-        this.data = this.input
-            .trimEnd()
+        this.grid = this.input
+            .trim()
             .split('\n')
-            .map((line) => line.trimEnd());
-        this.grid = this.data.map((row) => row.split('').map(Number));
+            .map((line) => line.split('').map(Number));
     }
 
-    findTotalHeatLoss = (grid: number[][], maximumStraightSteps: number, minimumStepsInRow: number): number => {
-        const visited = new Set();
+    findTotalHeatLoss = (maxbad: number, minbad: number): number => {
+        const adj: [number, number][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const seen = new Set<string>();
+        let b = 0;
+        const q: { [key: number]: [number, number, number, number, number][] } = {
+            0: [
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 1, 0],
+            ],
+        };
 
-        const heap = new Heap((a: Entry, b: Entry) => a.totalHeatLoss - b.totalHeatLoss);
-        heap.push({ x: 1, y: 0, directionX: 1, directionY: 0, totalHeatLoss: grid[0][1], stepsMade: 1 });
-        heap.push({ x: 0, y: 1, directionX: 0, directionY: 1, totalHeatLoss: grid[1][0], stepsMade: 1 });
-
-        while (heap.length > 0) {
-            const entry = heap.pop() as Entry;
-            if (entry.x === grid.length - 1 && entry.y === grid.length - 1 && entry.stepsMade >= minimumStepsInRow) {
-                return entry.totalHeatLoss;
-            }
-            const cacheKey = `${entry.x},${entry.y},${entry.directionX},${entry.directionY},${entry.stepsMade}`;
-            if (visited.has(cacheKey)) {
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            if (!q[b] || q[b].length === 0) {
+                b += 1;
                 continue;
             }
-            visited.add(cacheKey);
-            for (const direction of [
-                [-1, 0],
-                [1, 0],
-                [0, -1],
-                [0, 1],
-            ]) {
-                const maximumStepsTaken =
-                    entry.directionX === direction[0] &&
-                    entry.directionY === direction[1] &&
-                    entry.stepsMade === maximumStraightSteps;
-                const oppositeDirection = direction[0] === -entry.directionX && direction[1] === -entry.directionY;
-                if (maximumStepsTaken || oppositeDirection) {
-                    continue;
-                }
-                const isOtherDirection = entry.directionX !== direction[0] || entry.directionY !== direction[1];
-                const minimumStepsMade = entry.stepsMade >= minimumStepsInRow;
-                if (isOtherDirection && !minimumStepsMade) {
-                    continue;
-                }
-                const nextStep = { x: entry.x + direction[0], y: entry.y + direction[1] };
-                if (nextStep.x >= 0 && nextStep.x < grid[0].length && nextStep.y >= 0 && nextStep.y < grid.length) {
-                    const isSameDirection = entry.directionX === direction[0] && entry.directionY === direction[1];
-                    const steps = isSameDirection ? entry.stepsMade + 1 : 1;
-                    const newHeatLoss = entry.totalHeatLoss + grid[nextStep.y][nextStep.x];
-                    heap.push({
-                        ...nextStep,
-                        directionX: direction[0],
-                        directionY: direction[1],
-                        totalHeatLoss: newHeatLoss,
-                        stepsMade: steps,
-                    });
+
+            const cur = q[b].shift();
+            if (!cur || seen.has(cur.toString())) continue;
+            seen.add(cur.toString());
+            const [x, y, dx, dy, badness] = cur;
+
+            if (x === this.grid.length - 1 && y === this.grid[0].length - 1 && badness > minbad) return b;
+
+            for (const [xx, yy] of adj) {
+                const nx = x + xx;
+                const ny = y + yy;
+                const samedir = dx === xx && dy === yy;
+                const oppdir = dx === -xx && dy === -yy;
+                if (
+                    nx >= 0 &&
+                    nx < this.grid.length &&
+                    ny >= 0 &&
+                    ny < this.grid[0].length &&
+                    !oppdir &&
+                    (samedir ? badness < maxbad : badness > minbad)
+                ) {
+                    const bb = b + this.grid[nx][ny];
+                    if (!q[bb]) q[bb] = [];
+                    q[bb].push([nx, ny, xx, yy, samedir ? badness + 1 : 1]);
                 }
             }
         }
-        return 0;
     };
 
     partOne(): Solution {
-        return this.findTotalHeatLoss(this.grid, 3, 1);
+        return this.findTotalHeatLoss(3, -1);
     }
 
     partTwo(): Solution {
-        return this.findTotalHeatLoss(this.grid, 10, 4);
+        return this.findTotalHeatLoss(10, 3);
     }
 }
