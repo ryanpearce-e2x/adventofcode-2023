@@ -45,34 +45,36 @@ export default class Day5 extends Day implements IDay {
 
     partTwo(): Solution {
         const { seeds: seedsInput, maps } = this.parseInput();
-
-        const seeds = seedsInput
-            .map((seed, i) => (i % 2 === 0 ? [seed, seed + seedsInput[i + 1] - 1] : null))
-            .filter(Boolean) as [number, number][];
-
-        let parts = seeds.map(([from, to]) => [from, to]);
-
-        for (const ranges of maps) {
-            const newParts = [];
-            for (const part of parts) {
-                // eslint-disable-next-line prefer-const
-                let [start, end] = part;
-
-                while (start <= end) {
-                    const range = ranges.find((range) => start >= range[1] && start < range[1] + range[2]);
-                    if (range) {
-                        const rangeEnd = Math.min(end, range[1] + range[2] - 1);
-                        newParts.push([this.getValFromRanges(start, ranges), this.getValFromRanges(rangeEnd, ranges)]);
-                        start = rangeEnd + 1;
-                    } else {
-                        start++;
-                    }
-                }
-            }
-            parts = newParts;
+        let seeds = [];
+        for (let i = 0; i < seedsInput.length; i += 2) {
+            seeds.push([seedsInput[i], seedsInput[i] + seedsInput[i + 1] - 1]);
         }
 
-        const min = Math.min(...parts.map((part) => part[0]));
+        for (const ranges of maps) {
+            const newSeeds = [];
+            while (seeds.length > 0) {
+                const [s, e] = seeds.pop() as [number, number];
+                let transformed = false;
+
+                for (const [a, b, c] of ranges) {
+                    const os = Math.max(s, b);
+                    const oe = Math.min(e, b + c - 1);
+                    if (os <= oe) {
+                        newSeeds.push([os - b + a, oe - b + a]);
+                        if (os > s) seeds.push([s, os - 1]);
+                        if (e > oe) seeds.push([oe + 1, e]);
+                        transformed = true;
+                        break;
+                    }
+                }
+
+                if (!transformed) {
+                    newSeeds.push([s, e]);
+                }
+            }
+            seeds = newSeeds;
+        }
+        const min = Math.min(...seeds.map((seed) => seed[0]));
         return min;
     }
 }
