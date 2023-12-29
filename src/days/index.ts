@@ -16,6 +16,7 @@ import Day15 from './15';
 import Day16 from './16';
 import Day17 from './17';
 import Day18 from './18';
+import Day19 from './19';
 
 export {
     Day1,
@@ -36,4 +37,5 @@ export {
     Day16,
     Day17,
     Day18,
+    Day19,
 };
